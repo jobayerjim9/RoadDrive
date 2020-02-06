@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Road Drive</string>
+    <string name="enter_verification_code">Enter Verification Code</string>
+    <string name="enter_phone_number">Enter Phone Number</string>
+    <string-array name="typeDriver">
+        <item>Select Your Vehicle</item>
+        <item>Truck</item>
+        <item>Car</item>
+        <item>Micro</item>
+        <item>Bike</item>
+        <item>Bus</item>
+        <item>CNG</item>
+        <item>Cycle</item>
+        <item>Excavator</item>
+    </string-array>
+    <string name="home">Home</string>
+    <string name="history">History</string>
+    <string name="profile">Profile</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="menu">Menu</string>
+    <string name="_1">1</string>
+    <string name="api_key">AIzaSyCONgW76ASDWmhsnJtPCvBEmXFK5qtW4GI</string>
+    <string name="access_token" translatable="false">pk.eyJ1Ijoiam9iYXllcmppbTkiLCJhIjoiY2s1Yzh6c2JrMW9wdDNtcGdpaW03NjB0MiJ9.G8sdCQXSurRmwZNbxDFGQQ</string>
+    <string name="user_location_permission_explanation">This app needs location permissions to show its functionality.</string>
+    <string name="user_location_permission_not_granted">You didn\'t grant location permissions.</string>
+    <string name="navigation_guidance_day" translatable="false">mapbox://styles/mapbox/navigation-guidance-day-v4</string>
+
+</resources>

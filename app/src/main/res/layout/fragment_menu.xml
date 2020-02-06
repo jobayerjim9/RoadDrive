@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context=".ui.fragment.MenuFragment">
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:drawablePadding="8dp"
+            android:fontFamily="@font/googlesans_black"
+            android:includeFontPadding="true"
+            android:text="Driver Arena"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="26sp"
+            app:drawableStartCompat="@drawable/ic_agent"
+            app:layout_constraintBottom_toTopOf="@+id/divider2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:fontFamily="@font/googlesans_medium"
+            android:text="Explore Your Business"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="@color/colorPrimary"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@+id/textView5"
+            app:layout_constraintTop_toBottomOf="@+id/divider2" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/bidWonCard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            app:cardElevation="4dp"
+            app:cardMaxElevation="4dp"
+            app:contentPadding="32dp"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintBottom_toTopOf="@+id/fixTripCard"
+            app:layout_constraintEnd_toStartOf="@+id/tripCard"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView6"
+            app:layout_constraintVertical_bias="0.0"
+            >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+
+                <com.tistory.zladnrms.roundablelayout.RoundableLayout
+                    android:id="@+id/driverRoundable"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    app:backgroundColor="#332ECC71"
+                    app:cornerLeftBottom="80dp"
+                    app:cornerLeftSide="50dp"
+                    app:cornerLeftTop="80dp"
+                    app:cornerRightBottom="80dp"
+                    app:cornerRightSide="50dp"
+                    app:cornerRightTop="80dp">
+
+                    <ImageView
+                        android:id="@+id/driverImage"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginEnd="24dp"
+                        android:layout_marginBottom="24dp"
+                        android:contentDescription="Driver Logo"
+                        android:src="@drawable/ic_auction"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </com.tistory.zladnrms.roundablelayout.RoundableLayout>
+
+                <TextView
+                    android:id="@+id/textView1a0"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@font/googlesans_medium"
+                    android:text="Bids"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:foreground="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:id="@+id/statementCard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            app:cardElevation="4dp"
+            app:cardMaxElevation="4dp"
+            app:contentPadding="32dp"
+            app:layout_constraintBottom_toTopOf="@+id/helplineCard"
+            app:layout_constraintEnd_toEndOf="@+id/tripCard"
+            app:layout_constraintStart_toStartOf="@+id/tripCard"
+            app:layout_constraintTop_toBottomOf="@+id/tripCard">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+
+                <com.tistory.zladnrms.roundablelayout.RoundableLayout
+                    android:id="@+id/statementRoundable"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    app:backgroundColor="#33E74C3C"
+                    app:cornerLeftBottom="80dp"
+                    app:cornerLeftSide="50dp"
+                    app:cornerLeftTop="80dp"
+                    app:cornerRightBottom="80dp"
+                    app:cornerRightSide="50dp"
+                    app:cornerRightTop="80dp">
+
+                    <ImageView
+                        android:id="@+id/statamentImage"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginEnd="24dp"
+                        android:layout_marginBottom="24dp"
+                        android:src="@drawable/ic_check"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </com.tistory.zladnrms.roundablelayout.RoundableLayout>
+
+                <TextView
+                    android:id="@+id/textVaiew10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@font/googlesans_medium"
+                    android:text="Statement"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:foreground="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:id="@+id/fixTripCard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            app:cardElevation="4dp"
+            app:cardMaxElevation="4dp"
+            app:contentPadding="32dp"
+            app:layout_constraintBottom_toTopOf="@+id/helplineCard"
+            app:layout_constraintEnd_toEndOf="@+id/bidWonCard"
+            app:layout_constraintStart_toStartOf="@+id/bidWonCard"
+            app:layout_constraintTop_toBottomOf="@+id/bidWonCard">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+
+                <com.tistory.zladnrms.roundablelayout.RoundableLayout
+                    android:id="@+id/profitRoundable"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    app:backgroundColor="#33F1C40F"
+                    app:cornerLeftBottom="80dp"
+                    app:cornerLeftSide="50dp"
+                    app:cornerLeftTop="80dp"
+                    app:cornerRightBottom="80dp"
+                    app:cornerRightSide="50dp"
+                    app:cornerRightTop="80dp">
+
+                    <ImageView
+                        android:id="@+id/profitImage"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginEnd="24dp"
+                        android:layout_marginBottom="24dp"
+                        android:contentDescription="Increase Graph Logo"
+                        android:src="@drawable/ic_route"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </com.tistory.zladnrms.roundablelayout.RoundableLayout>
+
+                <TextView
+                    android:id="@+id/texatView10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@font/googlesans_medium"
+                    android:text="Fix Trip"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:foreground="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:id="@+id/tripCard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            app:cardElevation="4dp"
+            app:cardMaxElevation="4dp"
+            app:contentPadding="32dp"
+            app:layout_constraintBottom_toTopOf="@+id/statementCard"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/bidWonCard"
+            app:layout_constraintTop_toBottomOf="@+id/textView6"
+            app:layout_constraintVertical_bias="0.0">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+
+                <com.tistory.zladnrms.roundablelayout.RoundableLayout
+                    android:id="@+id/tripsRoundable"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    app:backgroundColor="#333498DB"
+                    app:cornerLeftBottom="80dp"
+                    app:cornerLeftSide="50dp"
+                    app:cornerLeftTop="80dp"
+                    app:cornerRightBottom="80dp"
+                    app:cornerRightSide="50dp"
+                    app:cornerRightTop="80dp">
+
+                    <ImageView
+                        android:id="@+id/tripImage"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginEnd="24dp"
+                        android:layout_marginBottom="24dp"
+                        android:contentDescription="Route Logo"
+                        android:src="@drawable/ic_route"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </com.tistory.zladnrms.roundablelayout.RoundableLayout>
+
+                <TextView
+                    android:id="@+id/textViesw10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@font/googlesans_medium"
+                    android:text="Bid Trip"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:foreground="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:id="@+id/helplineCard"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            app:cardElevation="4dp"
+            app:cardMaxElevation="4dp"
+            app:contentPadding="24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/statementCard"
+            app:layout_constraintStart_toStartOf="@+id/fixTripCard"
+            app:layout_constraintTop_toBottomOf="@+id/fixTripCard"
+            app:layout_constraintVertical_bias="0.0">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="vertical">
+
+
+                <com.tistory.zladnrms.roundablelayout.RoundableLayout
+                    android:id="@+id/helplineRoundable"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    app:backgroundColor="#33E67E22"
+                    app:cornerLeftBottom="80dp"
+                    app:cornerLeftSide="50dp"
+                    app:cornerLeftTop="80dp"
+                    app:cornerRightBottom="80dp"
+                    app:cornerRightSide="50dp"
+                    app:cornerRightTop="80dp">
+
+                    <ImageView
+                        android:id="@+id/helplineLogo"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginEnd="24dp"
+                        android:layout_marginBottom="24dp"
+                        android:src="@drawable/ic_headset"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </com.tistory.zladnrms.roundablelayout.RoundableLayout>
+
+                <TextView
+                    android:id="@+id/textView10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@font/googlesans_medium"
+                    android:gravity="center"
+                    android:text="Helpline"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:layout_marginTop="1dp"
+            android:background="@color/colorPrimaryDark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/textView5"
+            app:layout_constraintTop_toBottomOf="@+id/textView5" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

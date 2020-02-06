@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.activity.BidDetailsActivity">
+
+    <fragment
+        android:id="@+id/mapNearBy"
+        android:name="com.google.android.gms.maps.MapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/bidCard"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/bidCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        app:cardElevation="8dp"
+        app:cardMaxElevation="8dp"
+        app:contentPadding="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/bidButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mapNearBy">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="4dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tripStartsEnd"
+                    style="@android:style/Widget.Material.TextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableStart="@drawable/ic_date"
+                    android:drawablePadding="8dp"
+                    android:fontFamily="@font/googlesans_medium"
+                    android:gravity="center_vertical"
+                    android:text="Trip Starts 11/11/2019 At 6:00 AM"
+                    android:textColor="@color/colorPrimaryDark" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="4dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/typeBid"
+                    style="@android:style/Widget.Material.TextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableStart="@drawable/ic_motor_vehicle"
+                    android:drawablePadding="8dp"
+                    android:fontFamily="@font/googlesans_medium"
+                    android:gravity="center_vertical"
+                    android:text="Must Be Covered &amp; 16 Feet"
+                    android:textColor="@color/colorPrimaryDark" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="4dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/itemLabourBid"
+                    style="@android:style/Widget.Material.TextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableStart="@drawable/ic_cart"
+                    android:drawablePadding="8dp"
+                    android:fontFamily="@font/googlesans_medium"
+                    android:gravity="center_vertical"
+                    android:text="Carry Garments Item &amp; Need 1 Labour!"
+                    android:textColor="@color/colorPrimaryDark" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="4dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/totalVehicleBid"
+                    style="@android:style/Widget.Material.TextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableStart="@drawable/ic_hash"
+                    android:drawablePadding="8dp"
+                    android:fontFamily="@font/googlesans_medium"
+                    android:gravity="center_vertical"
+                    android:text="Total 5 Truck Required"
+                    android:textColor="@color/colorPrimaryDark" />
+
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/customerRequirementBid"
+                style="@android:style/Widget.Material.TextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="4dp"
+                android:layout_weight="1"
+                android:drawableStart="@drawable/ic_align"
+                android:drawablePadding="8dp"
+                android:fontFamily="@font/googlesans_medium"
+                android:gravity="center_vertical"
+                android:text="Customer: 1 Ton Fabric"
+                android:textColor="@color/colorPrimaryDark" />
+
+            <TextView
+                android:id="@+id/averageBidText"
+                style="@android:style/Widget.Material.TextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="4dp"
+                android:layout_weight="1"
+                android:drawableStart="@drawable/ic_check"
+                android:drawablePadding="8dp"
+                android:fontFamily="@font/googlesans_medium"
+                android:gravity="center_vertical"
+                android:text="No Bid Data Found!"
+                android:textColor="@color/colorPrimaryDark" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <Button
+        android:id="@+id/bidButton"
+        android:layout_width="0dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="4dp"
+        android:background="@color/colorPrimaryDark"
+        android:fontFamily="@font/googlesans_black"
+        android:text="Bid"
+        android:textAllCaps="false"
+        android:textColor="@color/colorAccent"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bidCard" />
+</androidx.constraintlayout.widget.ConstraintLayout>
