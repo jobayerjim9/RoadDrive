@@ -1,9 +1,11 @@
 package com.road.roaddrive.ui.activity;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -52,7 +54,7 @@ public class FixedTripActivity extends AppCompatActivity implements OnMapReadyCa
     private Polyline currentPolyline;
     private TextView fareText,riderNameText;
     private Button acceptFixedTrip;
-    private Button declineFixedTrip;
+    private Button declineFixedTrip,finishTrip;
     DatabaseReference liveTrip;
     DatabaseReference liveTripCust;
     private ImageView riderCallButton;
@@ -79,6 +81,7 @@ public class FixedTripActivity extends AppCompatActivity implements OnMapReadyCa
         riderContactLayout=findViewById(R.id.riderContactLayout);
         riderNameText=findViewById(R.id.riderNameText);
         declineFixedTrip=findViewById(R.id.declineFixedTrip);
+        finishTrip=findViewById(R.id.finishTrip);
 
         loadFixTripDetails();
 
@@ -117,44 +120,60 @@ public class FixedTripActivity extends AppCompatActivity implements OnMapReadyCa
                                     acceptFixedTrip.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            liveTrip.child("accept").setValue(true);
-                                            DatabaseReference trip=FirebaseDatabase.getInstance().getReference("LiveTrip");
+                                            if (fixTripDetailsModel.getRequestorUid().equals(FirebaseAuth.getInstance().getUid()))
+                                            {
+                                                Toast.makeText(FixedTripActivity.this, "You & Driver is the same person", Toast.LENGTH_SHORT).show();
+                                                finish();
+                                            }
+                                            else
+                                            {
+                                                liveTrip.child("accept").setValue(true);
+                                                DatabaseReference trip=FirebaseDatabase.getInstance().getReference("LiveTrip");
 //                        .child(fixTripDetailsModel.getRequestorUid());
-                                            trip.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                    for (final DataSnapshot dataSnapshot1:dataSnapshot.getChildren())
-                                                    {
-                                                        final FixTripDetailsModel tripModel=dataSnapshot1.getValue(FixTripDetailsModel.class);
-                                                        if (tripModel!=null)
+                                                trip.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                        for (final DataSnapshot dataSnapshot1:dataSnapshot.getChildren())
                                                         {
-                                                            final String key=dataSnapshot1.getKey();
-                                                            if (key!=null && !key.equals(fixTripDetailsModel.getRequestorUid()) && !key.equals(FirebaseAuth.getInstance().getUid()))
+                                                            try {
+
+                                                                final FixTripDetailsModel tripModel = dataSnapshot1.getValue(FixTripDetailsModel.class);
+                                                                if (tripModel != null) {
+                                                                    final String key = dataSnapshot1.getKey();
+                                                                    Log.d("removing key", key);
+                                                                    if (key != null && !key.equals(fixTripDetailsModel.getRequestorUid()) && !key.equals(FirebaseAuth.getInstance().getUid())) {
+                                                                        final DatabaseReference remove = trip.child(key);
+                                                                        remove.removeValue();
+                                                                        Log.d("removed key", key);
+                                                                    }
+                                                                }
+                                                            }
+                                                            catch (Exception e)
                                                             {
-                                                                final DatabaseReference remove=trip.child(key);
-                                                                remove.removeValue();
+                                                                e.printStackTrace();
                                                             }
                                                         }
-                                                    }
-                                                    if (!fixTripDetailsModelCustomer.isAccept())
-                                                    {
-                                                        trip.child(fixTripDetailsModel.getRequestorUid()).child("accept").setValue(true);
-                                                        trip.child(fixTripDetailsModel.getRequestorUid()).child("driverId").setValue(FirebaseAuth.getInstance().getUid());
+                                                        if (!fixTripDetailsModelCustomer.isAccept())
+                                                        {
+                                                            trip.child(fixTripDetailsModel.getRequestorUid()).child("accept").setValue(true);
+                                                            trip.child(fixTripDetailsModel.getRequestorUid()).child("driverId").setValue(FirebaseAuth.getInstance().getUid());
+
+                                                        }
+                                                        else
+                                                        {
+                                                            Toast.makeText(FixedTripActivity.this, "Already Accepted By Someone Else!", Toast.LENGTH_SHORT).show();
+                                                            liveTrip.removeValue();
+                                                        }
 
                                                     }
-                                                    else
-                                                    {
-                                                        Toast.makeText(FixedTripActivity.this, "Already Accepted By Someone Else!", Toast.LENGTH_SHORT).show();
-                                                        liveTrip.removeValue();
+
+                                                    @Override
+                                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
                                                     }
+                                                });
+                                            }
 
-                                                }
-
-                                                @Override
-                                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                                }
-                                            });
 
 
 
@@ -170,6 +189,25 @@ public class FixedTripActivity extends AppCompatActivity implements OnMapReadyCa
                                                 {
                                                     fixTripButton.setVisibility(View.GONE);
                                                     riderContactLayout.setVisibility(View.VISIBLE);
+                                                    finishTrip.setVisibility(View.VISIBLE);
+                                                    finishTrip.setOnClickListener(new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View v) {
+                                                            new AlertDialog.Builder(FixedTripActivity.this)
+                                                                    .setTitle("Are You Sure?")
+                                                                    .setMessage("Cancelling Will Charge Your Account!")
+                                                                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                                                        @Override
+                                                                        public void onClick(DialogInterface dialog, int which) {
+                                                                            startActivity(new Intent(FixedTripActivity.this,FixTripEndActivity.class));
+                                                                            finish();
+                                                                        }
+                                                                    })
+                                                                    .setNegativeButton("No",null)
+                                                                    .show();
+
+                                                        }
+                                                    });
                                                     riderNameText.setText(user.getName());
                                                     riderCallButton.setOnClickListener(new View.OnClickListener() {
                                                         @Override
@@ -187,6 +225,7 @@ public class FixedTripActivity extends AppCompatActivity implements OnMapReadyCa
                                                             }
                                                         }
                                                     });
+
                                                     LocationRequest locationRequest=new LocationRequest();
                                                     locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
                                                     locationRequest.setInterval(5000);
@@ -194,14 +233,17 @@ public class FixedTripActivity extends AppCompatActivity implements OnMapReadyCa
                                                         @Override
                                                         public void onLocationResult(LocationResult locationResult) {
                                                             if (locationResult != null) {
-                                                                Log.d("MyLocationOnTrip",locationResult.getLastLocation().getLatitude()+" "+locationResult.getLastLocation().getLongitude());
-                                                                double dist=distance(fixTripDetailsModelCustomer.getDesLat(),fixTripDetailsModelCustomer.getDesLng(),locationResult.getLastLocation().getLatitude(),locationResult.getLastLocation().getLongitude());
-                                                                Log.d("LastLocation",dist+"");
-                                                                if(dist<0.1 && loop)
+                                                                try {
+                                                                    Log.d("MyLocationOnTrip", locationResult.getLastLocation().getLatitude() + " " + locationResult.getLastLocation().getLongitude());
+                                                                    double dist = distance(fixTripDetailsModelCustomer.getDesLat(), fixTripDetailsModelCustomer.getDesLng(), locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude());
+                                                                    Log.d("LastLocation", dist + "");
+                                                                    if (dist <= 0.5) {
+                                                                        finishTrip.setText("Finish Trip!");
+                                                                    }
+                                                                }
+                                                                catch (Exception e)
                                                                 {
-                                                                    startActivity(new Intent(FixedTripActivity.this,FixTripEndActivity.class));
-                                                                    loop=false;
-                                                                    finish();
+                                                                    e.printStackTrace();
                                                                 }
                                                             }
                                                         }

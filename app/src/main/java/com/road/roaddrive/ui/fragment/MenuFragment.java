@@ -29,6 +29,7 @@ import com.road.roaddrive.model.UserProfile;
 import com.road.roaddrive.ui.activity.BidTripActivity;
 import com.road.roaddrive.ui.activity.BidWonActivity;
 import com.road.roaddrive.ui.activity.FixedTripActivity;
+import com.road.roaddrive.ui.activity.StatementActivity;
 import com.road.roaddrive.ui.activity.TripActivity;
 
 /**
@@ -47,6 +48,13 @@ public class MenuFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v= inflater.inflate(R.layout.fragment_menu, container, false);
+        CardView statementCard=v.findViewById(R.id.statementCard);
+        statementCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), StatementActivity.class));
+            }
+        });
         CardView bidWonCard=v.findViewById(R.id.bidWonCard);
         bidWonCard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,53 +124,63 @@ public class MenuFragment extends Fragment {
                         truck.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                final TruckDataModel truckDataModel=dataSnapshot.getValue(TruckDataModel.class);
-                                if(truckDataModel!=null)
+                                if (!dataSnapshot.exists())
                                 {
-                                    DatabaseReference bid=truck.child("DriversBid").child(FirebaseAuth.getInstance().getUid());
-                                    bid.addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            final BidDetailsModel bidDetailsModel=dataSnapshot.getValue(BidDetailsModel.class);
-                                            if (bidDetailsModel!=null)
-                                            {
-                                                DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference("user").child("UserProfile").child(truckDataModel.getUid());
-                                                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                    @Override
-                                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                        final UserProfile userProfile=dataSnapshot.getValue(UserProfile.class);
-                                                        if (userProfile!=null)
-                                                        {
-                                                            if (noDouble) {
-                                                                noDouble=false;
-                                                                progressDialog.dismiss();
-                                                                final Intent intent = new Intent(getContext(), BidTripActivity.class);
-                                                                intent.putExtra("fare", bidDetailsModel.getAmount());
-                                                                intent.putExtra("riderName", userProfile.getName());
-                                                                intent.putExtra("riderMobile", userProfile.getMobile());
-                                                                intent.putExtra("sourceLat", truckDataModel.getSource().getLat());
-                                                                intent.putExtra("sourceLng", truckDataModel.getSource().getLng());
-                                                                intent.putExtra("desLat", truckDataModel.getDestination().getLat());
-                                                                intent.putExtra("desLng", truckDataModel.getDestination().getLng());
-                                                                startActivity(intent);
+                                    progressDialog.dismiss();
+                                    databaseReference.removeValue();
+                                    Toast.makeText(getContext(), "Your Account Error! Contact Support!", Toast.LENGTH_SHORT).show();
+                                }
+                                else {
+                                    final TruckDataModel truckDataModel = dataSnapshot.getValue(TruckDataModel.class);
+                                    if (truckDataModel != null) {
+                                        DatabaseReference bid = truck.child("DriversBid").child(FirebaseAuth.getInstance().getUid());
+                                        bid.addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                final BidDetailsModel bidDetailsModel = dataSnapshot.getValue(BidDetailsModel.class);
+                                                if (bidDetailsModel != null) {
+                                                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("user").child("UserProfile").child(truckDataModel.getUid());
+                                                    databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                            final UserProfile userProfile = dataSnapshot.getValue(UserProfile.class);
+                                                            if (userProfile != null) {
+                                                                if (noDouble) {
+                                                                    noDouble = false;
+                                                                    progressDialog.dismiss();
+                                                                    final Intent intent = new Intent(getContext(), BidTripActivity.class);
+                                                                    intent.putExtra("fare", bidDetailsModel.getAmount());
+                                                                    intent.putExtra("riderName", userProfile.getName());
+                                                                    intent.putExtra("riderMobile", userProfile.getMobile());
+                                                                    intent.putExtra("sourceLat", truckDataModel.getSource().getLat());
+                                                                    intent.putExtra("sourceLng", truckDataModel.getSource().getLng());
+                                                                    intent.putExtra("desLat", truckDataModel.getDestination().getLat());
+                                                                    intent.putExtra("desLng", truckDataModel.getDestination().getLng());
+                                                                    startActivity(intent);
+                                                                }
                                                             }
                                                         }
-                                                    }
 
-                                                    @Override
-                                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                        @Override
+                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                            progressDialog.dismiss();
+                                                            Log.d("TripActivity", databaseError.getDetails());
+                                                            Toast.makeText(getContext(), databaseError.getDetails(), Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    });
 
-                                                    }
-                                                });
-
+                                                }
                                             }
-                                        }
 
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                progressDialog.dismiss();
+                                                Log.d("TripActivity", databaseError.getDetails());
+                                                Toast.makeText(getContext(), databaseError.getDetails(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
 
-                                        }
-                                    });
+                                    }
 
                                 }
                             }
@@ -171,8 +189,10 @@ public class MenuFragment extends Fragment {
                             public void onCancelled(@NonNull DatabaseError databaseError) {
                                 progressDialog.dismiss();
                                 Log.d("TripActivity",databaseError.getDetails());
+                                Toast.makeText(getContext(), databaseError.getDetails(), Toast.LENGTH_SHORT).show();
                             }
                         });
+
                     }
                 }
             }

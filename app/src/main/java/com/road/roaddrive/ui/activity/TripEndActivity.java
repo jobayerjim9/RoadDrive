@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -22,19 +23,31 @@ import com.road.roaddrive.R;
 import com.road.roaddrive.model.AgentProfile;
 import com.road.roaddrive.model.BidDetailsModel;
 import com.road.roaddrive.model.DriverProfile;
+import com.road.roaddrive.model.StatementModel;
 import com.road.roaddrive.model.TruckDataModel;
 
 public class TripEndActivity extends AppCompatActivity {
     TextView tripEndMessage;
+    ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip_end);
         tripEndMessage=findViewById(R.id.tripEndMessage);
+        progressDialog=new ProgressDialog(this);
+        progressDialog.setMessage("Finishing Your Trip! Do Not Close App!");
+        progressDialog.setCancelable(false);
         finishingTrip();
 
     }
     private void finishingTrip() {
+        if (!progressDialog.isShowing()) {
+            progressDialog.show();
+        }
+        else
+        {
+            progressDialog.dismiss();
+        }
         DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference("DriverProfile").child(FirebaseAuth.getInstance().getUid()).child("RunningTrip");
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -93,13 +106,21 @@ public class TripEndActivity extends AppCompatActivity {
                                                                     double total=agentProfile.getBalanceProfile().getTotalEarn();
                                                                     total=total+agent;
                                                                     agentRef.child("balanceProfile").child("totalEarn").setValue(total);
-                                                                    profile.child("RunningTrip").removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                    StatementModel statementModel=new StatementModel(amount,amount-companyD-agentD,companyD,agentD,FirebaseAuth.getInstance().getUid(),agentUsername);
+                                                                    DatabaseReference stRef=FirebaseDatabase.getInstance().getReference().child("Statements").child(FirebaseAuth.getInstance().getUid());
+                                                                    stRef.push().setValue(statementModel).addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                         @Override
-                                                                        public void onComplete(@NonNull Task<Void> task) {
-                                                                            String placeHolder="Trip Completed!\nCollect "+bidDetailsModel.getAmount()+"/- From Customer!";
-                                                                            tripEndMessage.setText(placeHolder);
+                                                                        public void onSuccess(Void aVoid) {
+                                                                            profile.child("RunningTrip").removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                @Override
+                                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                                    String placeHolder="Trip Completed!\nCollect "+bidDetailsModel.getAmount()+"/- From Customer!";
+                                                                                    tripEndMessage.setText(placeHolder);
+                                                                                }
+                                                                            });
                                                                         }
                                                                     });
+
                                                                     return;
                                                                 }
                                                             }
@@ -108,7 +129,9 @@ public class TripEndActivity extends AppCompatActivity {
 
                                                     @Override
                                                     public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                                                        Toast.makeText(TripEndActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                                                        progressDialog.dismiss();
+                                                        tripEndMessage.setText(databaseError.getDetails());
                                                     }
                                                 });
 
@@ -117,7 +140,9 @@ public class TripEndActivity extends AppCompatActivity {
 
                                         @Override
                                         public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                                            Toast.makeText(TripEndActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                                            progressDialog.dismiss();
+                                            tripEndMessage.setText(databaseError.getDetails());
                                         }
                                     });
                                 }
@@ -125,7 +150,9 @@ public class TripEndActivity extends AppCompatActivity {
 
                             @Override
                             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                                Toast.makeText(TripEndActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                                progressDialog.dismiss();
+                                tripEndMessage.setText(databaseError.getDetails());
                             }
                         });
 
@@ -136,6 +163,9 @@ public class TripEndActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Log.d("TripActivity",databaseError.getDetails());
+                Toast.makeText(TripEndActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+                tripEndMessage.setText(databaseError.getDetails());
             }
         });
     }

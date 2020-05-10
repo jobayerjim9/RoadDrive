@@ -15,6 +15,7 @@ public class FixTripDetailsModel {
         this.desLng = desLng;
         this.fare = fare;
         this.requestorUid = requestorUid;
+        accept=false;
     }
 
     public boolean isAccept() {

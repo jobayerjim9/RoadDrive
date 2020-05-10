@@ -21,7 +21,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="menu">Menu</string>
     <string name="_1">1</string>
-    <string name="api_key">AIzaSyCONgW76ASDWmhsnJtPCvBEmXFK5qtW4GI</string>
+    <string name="api_key">AIzaSyD9cXmVfYx8H9ulMictnIDJfR1L9SMdhvA</string>
     <string name="access_token" translatable="false">pk.eyJ1Ijoiam9iYXllcmppbTkiLCJhIjoiY2s1Yzh6c2JrMW9wdDNtcGdpaW03NjB0MiJ9.G8sdCQXSurRmwZNbxDFGQQ</string>
     <string name="user_location_permission_explanation">This app needs location permissions to show its functionality.</string>
     <string name="user_location_permission_not_granted">You didn\'t grant location permissions.</string>

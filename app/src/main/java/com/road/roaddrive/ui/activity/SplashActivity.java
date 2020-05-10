@@ -43,49 +43,35 @@ public class SplashActivity extends AppCompatActivity {
         anim.setRepeatCount(Animation.INFINITE);
         anim.setDuration(2000);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_BACKGROUND_LOCATION}, 1);
             }
             else
             {
                 final ImageView splash = findViewById(R.id.logoSplash);
                 splash.startAnimation(anim);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        splash.setAnimation(null);
-                        if(FirebaseAuth.getInstance().getCurrentUser()!=null)
-                        {
-                            checkSignUp();
-                        }
-                        else {
-                            startActivity(new Intent(SplashActivity.this, SignInActivity.class));
-                            finish();
-                        }
-
-                    }
-                },1000);
+                if(FirebaseAuth.getInstance().getCurrentUser()!=null)
+                {
+                    checkSignUp();
+                }
+                else {
+                    startActivity(new Intent(SplashActivity.this, SignInActivityEmail.class));
+                    finish();
+                }
             }
         }
         else
         {
             final ImageView splash = findViewById(R.id.logoSplash);
             splash.startAnimation(anim);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    splash.setAnimation(null);
-                    if(FirebaseAuth.getInstance().getCurrentUser()!=null)
-                    {
-                        checkSignUp();
-                    }
-                    else {
-                        startActivity(new Intent(SplashActivity.this, SignInActivity.class));
-                        finish();
-                    }
-
-                }
-            },1000);
+            if(FirebaseAuth.getInstance().getCurrentUser()!=null)
+            {
+                checkSignUp();
+            }
+            else {
+                startActivity(new Intent(SplashActivity.this, SignInActivityEmail.class));
+                finish();
+            }
         }
 
 // Start animating the image
@@ -111,6 +97,7 @@ public class SplashActivity extends AppCompatActivity {
                         }
                         else
                         {
+
                             startActivity(new Intent(SplashActivity.this,PendingActivity.class));
                         }
                         finish();
@@ -119,7 +106,8 @@ public class SplashActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    Intent intent=new Intent(SplashActivity.this,SignUpActivity.class);
+                    FirebaseAuth.getInstance().signOut();
+                    Intent intent=new Intent(SplashActivity.this,SignInActivityEmail.class);
                     startActivity(intent);
                     finish();
                 }
@@ -136,27 +124,22 @@ public class SplashActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 final ImageView splash = findViewById(R.id.logoSplash);
                 splash.startAnimation(anim);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        splash.setAnimation(null);
-                        if(FirebaseAuth.getInstance().getCurrentUser()!=null)
-                        {
-                            checkSignUp();
-                        }
-                        else {
-                            startActivity(new Intent(SplashActivity.this, SignInActivity.class));
-                            finish();
-                        }
+                if(FirebaseAuth.getInstance().getCurrentUser()!=null)
+                {
+                    checkSignUp();
+                }
+                else {
+                    startActivity(new Intent(SplashActivity.this, SignInActivityEmail.class));
+                    finish();
+                }
 
-                    }
-                },1000);
 
             } else {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_BACKGROUND_LOCATION}, 1);
                 Toast.makeText(this, "Please Allow Location Permission", Toast.LENGTH_LONG).show();
             }
         }

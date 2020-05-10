@@ -95,6 +95,21 @@
             </androidx.cardview.widget.CardView>
 
             <Button
+                android:id="@+id/finishTripBid"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="8dp"
+                android:layout_weight="1"
+                android:background="@color/colorPrimaryDark"
+                android:fontFamily="@font/googlesans_black"
+                android:text="Cancel Trip!"
+                android:textAllCaps="false"
+                android:textColor="@color/colorAccent"
+                android:textSize="16sp"
+                android:visibility="gone" />
+
+            <Button
                 android:id="@+id/navigationButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

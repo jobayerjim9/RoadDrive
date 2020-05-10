@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -20,6 +22,7 @@ import com.road.roaddrive.R;
 import com.road.roaddrive.model.AgentProfile;
 import com.road.roaddrive.model.DriverProfile;
 import com.road.roaddrive.model.FixTripDetailsModel;
+import com.road.roaddrive.model.StatementModel;
 
 public class FixTripEndActivity extends AppCompatActivity {
 
@@ -41,6 +44,10 @@ public class FixTripEndActivity extends AppCompatActivity {
         if (!progressDialog.isShowing()) {
             progressDialog.show();
         }
+        else
+        {
+            progressDialog.dismiss();
+        }
         DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference("LiveTrip").child(FirebaseAuth.getInstance().getUid());
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -61,7 +68,7 @@ public class FixTripEndActivity extends AppCompatActivity {
                             if(driverProfile!=null)
                             {
                                 double balance=driverProfile.getBalanceProfile().getCurrentBalance();
-                                balance=balance-company;
+                                balance=balance-companyD-agentD;
                                 DatabaseReference upBalance=profile.getRef();
                                 upBalance.child("balanceProfile").child("currentBalance").setValue(balance);
                                 double totalEarn=driverProfile.getBalanceProfile().getTotalEarn();
@@ -91,33 +98,63 @@ public class FixTripEndActivity extends AppCompatActivity {
                                                         public void onComplete(@NonNull Task<Void> task) {
                                                             String placeHolder="Trip Completed!\nCollect "+fixTripDetailsModel.getFare()+"/- From Customer!";
                                                             tripEndMessage.setText(placeHolder);
-                                                            DatabaseReference live= FirebaseDatabase.getInstance().getReference("LiveTrip");
-                                                            live.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                            DatabaseReference liveUser= FirebaseDatabase.getInstance().getReference("LiveTrip").child(fixTripDetailsModel.getRequestorUid());
+                                                            DatabaseReference liveDriver= FirebaseDatabase.getInstance().getReference("LiveTrip").child(FirebaseAuth.getInstance().getUid());
+                                                            DatabaseReference statement= FirebaseDatabase.getInstance().getReference("Statements");
+                                                            StatementModel statementModel=new StatementModel(fixTripDetailsModel.getFare(),fixTripDetailsModel.getFare()-company-agent,companyD,agentD,FirebaseAuth.getInstance().getUid(),driverProfile.getAgentUsername());
+                                                            statement.child(FirebaseAuth.getInstance().getUid()).push().setValue(statementModel).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                 @Override
-                                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                                    for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren())
-                                                                    {
-                                                                        FixTripDetailsModel temp=dataSnapshot1.getValue(FixTripDetailsModel.class);
-                                                                        if(temp.getRequestorUid().equals(fixTripDetailsModel.getRequestorUid()))
-                                                                        {
-                                                                            DatabaseReference remove=dataSnapshot1.getRef();
-                                                                            remove.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                                @Override
-                                                                                public void onSuccess(Void aVoid) {
-                                                                                    if (progressDialog.isShowing()) {
-                                                                                        progressDialog.dismiss();
-                                                                                    }
-                                                                                }
-                                                                            });
-                                                                        }
-                                                                    }
-                                                                }
-
-                                                                @Override
-                                                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                    liveUser.removeValue();
+                                                                    liveDriver.removeValue();
+                                                                    progressDialog.dismiss();
                                                                 }
                                                             });
+
+
+
+
+
+
+//                                                            live.addListenerForSingleValueEvent(new ValueEventListener() {
+//                                                                @Override
+//                                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                                                                    for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren())
+//                                                                    {
+//                                                                        FixTripDetailsModel temp=dataSnapshot1.getValue(FixTripDetailsModel.class);
+//                                                                        Log.d("idForStatement",temp.getRequestorUid());
+//                                                                        if(temp.getRequestorUid().equals(fixTripDetailsModel.getRequestorUid()))
+//                                                                        {
+//                                                                            StatementModel statementModel=new StatementModel(amount,amount-companyD-agentD,companyD,agentD,FirebaseAuth.getInstance().getUid(),agentUsername);
+//                                                                            DatabaseReference stRef=FirebaseDatabase.getInstance().getReference().child("Statements").child(FirebaseAuth.getInstance().getUid());
+//                                                                            progressDialog.setMessage("Creating Statement!");
+//                                                                            stRef.push().setValue(statementModel).addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                                                                @Override
+//                                                                                public void onSuccess(Void aVoid) {
+//                                                                                    DatabaseReference remove=dataSnapshot1.getRef();
+//                                                                                    remove.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                                                                        @Override
+//                                                                                        public void onSuccess(Void aVoid) {
+//                                                                                            if (progressDialog.isShowing()) {
+//                                                                                                progressDialog.dismiss();
+//                                                                                            }
+//                                                                                        }
+//                                                                                    });
+//
+//                                                                                }
+//                                                                            });
+//
+//                                                                        }
+//                                                                    }
+//                                                                }
+//
+//                                                                @Override
+//                                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+//                                                                    Toast.makeText(FixTripEndActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+//                                                                    progressDialog.dismiss();
+//                                                                    tripEndMessage.setText(databaseError.getDetails());
+//                                                                }
+//                                                            });
                                                         }
                                                     });
                                                     return;
@@ -128,7 +165,9 @@ public class FixTripEndActivity extends AppCompatActivity {
 
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                                        Toast.makeText(FixTripEndActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                                        progressDialog.dismiss();
+                                        tripEndMessage.setText(databaseError.getDetails());
                                     }
                                 });
 
@@ -137,7 +176,9 @@ public class FixTripEndActivity extends AppCompatActivity {
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                            Toast.makeText(FixTripEndActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                            progressDialog.dismiss();
+                            tripEndMessage.setText(databaseError.getDetails());
                         }
                     });
                 }
@@ -145,7 +186,9 @@ public class FixTripEndActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                Toast.makeText(FixTripEndActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+                tripEndMessage.setText(databaseError.getDetails());
             }
         });
 

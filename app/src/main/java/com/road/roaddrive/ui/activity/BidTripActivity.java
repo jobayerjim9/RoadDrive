@@ -1,7 +1,9 @@
 package com.road.roaddrive.ui.activity;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -40,7 +42,7 @@ public class BidTripActivity extends AppCompatActivity implements OnMapReadyCall
     private TextView riderNameText,fareText;
     private Polyline currentPolyline;
     private ImageView riderCallButton;
-    private Button navigationButton;
+    private Button navigationButton,finishTripBid;
     private LocationCallback locationCallback;
     private FusedLocationProviderClient fusedLocationClient;
     private MarkerOptions source, destination;
@@ -58,6 +60,7 @@ public class BidTripActivity extends AppCompatActivity implements OnMapReadyCall
         desLat=getIntent().getDoubleExtra("desLat",0);
         desLng=getIntent().getDoubleExtra("desLng",0);
         riderNameText=findViewById(R.id.riderNameText);
+        finishTripBid=findViewById(R.id.finishTripBid);
         fusedLocationClient= LocationServices.getFusedLocationProviderClient(this);
         fareText=findViewById(R.id.fareText);
         source=new MarkerOptions().position(new LatLng(sourceLat,sourceLng)).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
@@ -83,6 +86,25 @@ public class BidTripActivity extends AppCompatActivity implements OnMapReadyCall
                 }
             }
         });
+        finishTripBid.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(BidTripActivity.this)
+                        .setTitle("Are You Sure?")
+                        .setMessage("Cancelling Will Charge Your Account!")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                startActivity(new Intent(BidTripActivity.this,TripEndActivity.class));
+                                loop=false;
+                                finish();
+                            }
+                        })
+                        .setNegativeButton("No",null)
+                        .show();
+
+            }
+        });
         LocationRequest locationRequest=new LocationRequest();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(5000);
@@ -93,11 +115,9 @@ public class BidTripActivity extends AppCompatActivity implements OnMapReadyCall
                     Log.d("MyLocationOnTrip",locationResult.getLastLocation().getLatitude()+" "+locationResult.getLastLocation().getLongitude());
                     double dist=distance(desLat,desLng,locationResult.getLastLocation().getLatitude(),locationResult.getLastLocation().getLongitude());
                     Log.d("LastLocation",dist+"");
-                    if(dist<0.1 && loop)
+                    if(dist<0.5)
                     {
-                        startActivity(new Intent(BidTripActivity.this,TripEndActivity.class));
-                        loop=false;
-                        finish();
+                        finishTripBid.setText("Finish Trip!");
                     }
                 }
             }

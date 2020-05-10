@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:dist="http://schemas.android.com/apk/distribution"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.road.roaddrive">
 
     <dist:module dist:instant="true" />
@@ -10,19 +11,22 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
-
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
         android:hardwareAccelerated="false"
+        android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppThemeBlackAccent">
-        <activity android:name=".ui.activity.BidTripActivity"></activity>
+        android:theme="@style/AppThemeBlackAccent"
+        tools:targetApi="m">
+        <activity android:name=".ui.activity.StatementActivity"></activity>
+        <activity android:name=".ui.activity.SignInActivityEmail" />
+        <activity android:name=".ui.activity.BidTripActivity" />
         <activity android:name=".ui.activity.FixTripEndActivity" />
         <activity android:name=".ui.activity.FixTripNavigationActivity" />
         <activity android:name=".ui.activity.FixedTripActivity" />

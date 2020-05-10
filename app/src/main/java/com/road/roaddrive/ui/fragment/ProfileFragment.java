@@ -29,6 +29,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.road.roaddrive.R;
 import com.road.roaddrive.model.DriverProfile;
 import com.road.roaddrive.ui.activity.SignInActivity;
+import com.road.roaddrive.ui.activity.SignInActivityEmail;
 
 import java.util.Objects;
 
@@ -89,7 +90,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(context, SignInActivity.class));
+                startActivity(new Intent(context, SignInActivityEmail.class));
                 Objects.requireNonNull(getActivity()).finish();
             }
         });

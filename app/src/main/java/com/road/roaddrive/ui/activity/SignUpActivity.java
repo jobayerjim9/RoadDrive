@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.ProgressDialog;
@@ -14,6 +15,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -46,6 +48,7 @@ public class SignUpActivity extends AppCompatActivity {
     private Spinner driverTypeSpinner;
     private ImageView carLicense1, carLicense2, drivingLicense1, drivingLicense2;
     private Button finishButton;
+    private String email;
     private final int CAR_LICENSE_IMAGE_1 = 1;
     private final int CAR_LICENSE_IMAGE_2 = 2;
     private final int DRIVING_LICENSE_IMAGE_1 = 3;
@@ -75,6 +78,7 @@ public class SignUpActivity extends AppCompatActivity {
         drivingLicense2 = findViewById(R.id.drivingLicense2);
         finishButton = findViewById(R.id.finishButton);
         driverTypeSpinner = findViewById(R.id.driverTypeSpinner);
+        email=getIntent().getStringExtra("email");
         final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.typeDriver, R.layout.spinner_item);
         driverTypeSpinner.setAdapter(adapter);
         driverTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -155,23 +159,23 @@ public class SignUpActivity extends AppCompatActivity {
             progressDialog.setCancelable(false);
             progressDialog.setMessage("Please Be Patient! Uploading Your Data! (0%)");
             progressDialog.show();
-            final DriverProfile driverProfile = new DriverProfile(FirebaseAuth.getInstance().getUid(), name, mobile, driverType,agentUsername);
+            final DriverProfile driverProfile = new DriverProfile(FirebaseAuth.getInstance().getUid(), name, mobile, driverType,agentUsername,email);
             final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("DriverProfile").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
             Bitmap car1 = ((BitmapDrawable) carLicense1.getDrawable()).getBitmap();
             Bitmap car2 = ((BitmapDrawable) carLicense2.getDrawable()).getBitmap();
             Bitmap driving1 = ((BitmapDrawable) drivingLicense1.getDrawable()).getBitmap();
             Bitmap driving2 = ((BitmapDrawable) drivingLicense2.getDrawable()).getBitmap();
             ByteArrayOutputStream baosCar1 = new ByteArrayOutputStream();
-            car1.compress(Bitmap.CompressFormat.JPEG, 100, baosCar1);
+            car1.compress(Bitmap.CompressFormat.JPEG, 50, baosCar1);
             final byte[] car1Data = baosCar1.toByteArray();
             ByteArrayOutputStream baosCar2 = new ByteArrayOutputStream();
-            car2.compress(Bitmap.CompressFormat.JPEG, 100, baosCar2);
+            car2.compress(Bitmap.CompressFormat.JPEG, 50, baosCar2);
             final byte[] car2Data = baosCar2.toByteArray();
             ByteArrayOutputStream baosDriving1 = new ByteArrayOutputStream();
-            driving1.compress(Bitmap.CompressFormat.JPEG, 100, baosDriving1);
+            driving1.compress(Bitmap.CompressFormat.JPEG, 50, baosDriving1);
             final byte[] driving1Data = baosDriving1.toByteArray();
             ByteArrayOutputStream baosDriving2 = new ByteArrayOutputStream();
-            driving2.compress(Bitmap.CompressFormat.JPEG, 100, baosDriving2);
+            driving2.compress(Bitmap.CompressFormat.JPEG, 50, baosDriving2);
             final byte[] driving2Data = baosDriving1.toByteArray();
             DatabaseReference agentRef=FirebaseDatabase.getInstance().getReference().child("AgentProfile");
             agentRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -297,13 +301,26 @@ public class SignUpActivity extends AppCompatActivity {
     private void prepareImagePicker(int code) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(SignUpActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, code);
+                ActivityCompat.requestPermissions(SignUpActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
             } else {
                 chooseImage(code);
             }
 
         } else {
             chooseImage(code);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                Toast.makeText(this, "Please Allow Permission", Toast.LENGTH_LONG).show();
+            }
         }
     }
 

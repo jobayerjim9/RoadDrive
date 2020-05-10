@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -62,11 +63,6 @@ public class CarBidWonAdapter extends RecyclerView.Adapter<CarBidWonAdapter.Home
         holder.startTripButon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Intent intent=new Intent(context, TripActivity.class);
-                intent.putExtra("sourceLat",carDataModels.get(position).getSource().getLat());
-                intent.putExtra("sourceLng",carDataModels.get(position).getSource().getLng());
-                intent.putExtra("desLat",carDataModels.get(position).getDestination().getLat());
-                intent.putExtra("desLng",carDataModels.get(position).getDestination().getLng());
                 DatabaseReference profile= FirebaseDatabase.getInstance().getReference("DriverProfile").child(FirebaseAuth.getInstance().getUid()).child("RunningTrip");
                 profile.child(carDataModels.get(position).getKey()).child("exist").setValue(true).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -77,12 +73,14 @@ public class CarBidWonAdapter extends RecyclerView.Adapter<CarBidWonAdapter.Home
                             public void onComplete(@NonNull Task<Void> task) {
                                 if(task.isSuccessful())
                                 {
-                                    context.startActivity(intent);
+                                    Toast.makeText(context, "Trip Started!", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
                     }
                 });
+
+
 
             }
         });

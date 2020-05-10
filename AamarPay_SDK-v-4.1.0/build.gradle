@@ -1,0 +1,2 @@
+configurations.maybeCreate("default")
+artifacts.add("default", file('AamarPay_SDK-v-4.1.0.aar'))

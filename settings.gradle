@@ -1,2 +1,2 @@
-include ':app'
+include ':app', ':AamarPay_SDK-v-4.1.0'
 rootProject.name='Road Drive'

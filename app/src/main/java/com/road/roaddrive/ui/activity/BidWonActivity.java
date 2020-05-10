@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -66,6 +67,10 @@ public class BidWonActivity extends AppCompatActivity {
                             setupAsMicro();
                         } else if (driverProfile.getDriverType().equals("Bike")) {
                             setupAsBike();
+                        }
+                        else
+                        {
+                            Toast.makeText(BidWonActivity.this, "Under Maintenance!", Toast.LENGTH_SHORT).show();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

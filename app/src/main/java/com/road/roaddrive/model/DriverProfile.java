@@ -1,13 +1,13 @@
 package com.road.roaddrive.model;
 
 public class DriverProfile {
-    private String uid,name,mobile,driverType,address,agentUsername;
+    private String uid,name,mobile,driverType,address,agentUsername,email;
     private boolean verified;
     private BalanceProfile balanceProfile;
     public DriverProfile() {
     }
 
-    public DriverProfile(String uid, String name, String mobile, String driverType, String agentUsername) {
+    public DriverProfile(String uid, String name, String mobile, String driverType, String agentUsername, String email) {
         this.uid = uid;
         this.name = name;
         this.mobile = mobile;
@@ -16,6 +16,15 @@ public class DriverProfile {
         this.balanceProfile=new BalanceProfile(0,0);
         this.address="Nor Set";
         this.agentUsername=agentUsername;
+        this.email=email;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getAgentUsername() {

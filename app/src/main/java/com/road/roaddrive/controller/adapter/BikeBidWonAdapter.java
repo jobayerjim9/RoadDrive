@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -22,6 +23,7 @@ import com.road.roaddrive.model.AppData;
 import com.road.roaddrive.model.BidDetailsModel;
 import com.road.roaddrive.model.BikeDataModel;
 import com.road.roaddrive.ui.activity.BidDetailsActivity;
+import com.road.roaddrive.ui.activity.BidTripActivity;
 import com.road.roaddrive.ui.activity.TripActivity;
 
 import java.util.ArrayList;
@@ -66,27 +68,26 @@ public class BikeBidWonAdapter extends RecyclerView.Adapter<BikeBidWonAdapter.Ho
         holder.startTripButon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Intent intent=new Intent(context, TripActivity.class);
-                intent.putExtra("sourceLat",bikeDataModels.get(position).getSource().getLat());
-                intent.putExtra("sourceLng",bikeDataModels.get(position).getSource().getLng());
-                intent.putExtra("desLat",bikeDataModels.get(position).getDestination().getLat());
-                intent.putExtra("desLng",bikeDataModels.get(position).getDestination().getLng());
-                DatabaseReference profile= FirebaseDatabase.getInstance().getReference("DriverProfile").child(FirebaseAuth.getInstance().getUid()).child("RunningTrip");
-                profile.child(bikeDataModels.get(position).getKey()).child("exist").setValue(true).addOnCompleteListener(new OnCompleteListener<Void>() {
+                DatabaseReference post=FirebaseDatabase.getInstance().getReference("BidPosts").child("Bike").child(bikeDataModels.get(position).getKey());
+                post.child("status").setValue("Trip").addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        DatabaseReference post=FirebaseDatabase.getInstance().getReference("BidPosts").child("Bike").child(bikeDataModels.get(position).getKey());
-                        post.child("status").setValue("Trip").addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if(task.isSuccessful())
-                                {
-                                    context.startActivity(intent);
+                        if(task.isSuccessful())
+                        {
+                            DatabaseReference profile= FirebaseDatabase.getInstance().getReference("DriverProfile").child(FirebaseAuth.getInstance().getUid()).child("RunningTrip");
+                            profile.child(bikeDataModels.get(position).getKey()).child("exist").setValue(true).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    Toast.makeText(context, "Your Trip Started!", Toast.LENGTH_SHORT).show();
                                 }
-                            }
-                        });
+                            });
+
+                        }
                     }
                 });
+
+
+
 
             }
         });
